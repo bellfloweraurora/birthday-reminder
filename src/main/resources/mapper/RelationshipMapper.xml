@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carrot.timeode.mapper.RelationshipMapper">
+
+    <resultMap id="BaseResultMap" type="com.carrot.timeode.domain.Relationship">
+            <id property="id" column="id" />
+            <result property="name" column="name" />
+            <result property="calendarType" column="calendar_type" />
+            <result property="birthday" column="birthday" />
+            <result property="birthdayMonth" column="birthday_month" />
+            <result property="birthdayDay" column="birthday_day" />
+            <result property="tag" column="tag" />
+            <result property="reminderEnabled" column="reminder_enabled" />
+            <result property="congratulateEnabled" column="congratulate_enabled" />
+            <result property="relationshipEmail" column="relationship_email" />
+            <result property="greeting" column="greeting" />
+            <result property="selfCall" column="self_call" />
+            <result property="daysBefore" column="days_before" typeHandler="com.carrot.timeode.typehandler.IntegerListJsonTypeHandler"/>
+            <result property="notes" column="notes" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,calendar_type,birthday,birthday_month,birthday_day,
+        tag,reminder_enabled,congratulate_enabled,relationship_email,greeting,
+        self_call,days_before,notes
+    </sql>
+    <insert id="add" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO relationship (
+            name,
+            calendar_type,
+            birthday,
+            birthday_month,
+            birthday_day,
+            tag,
+            reminder_enabled,
+            congratulate_enabled,
+            relationship_email,
+            greeting,
+            self_call,
+            notes,
+            days_before
+        ) VALUES (#{name},
+                  #{calendarType},
+                  #{birthday},
+                  #{birthdayMonth},
+                  #{birthdayDay},
+                  #{tag},
+                  #{reminderEnabled},
+                  #{congratulateEnabled},
+                  #{relationshipEmail},
+                  #{greeting},
+                  #{selfCall},
+                  #{notes},
+                  #{daysBefore, typeHandler=com.carrot.timeode.typehandler.IntegerListJsonTypeHandler})
+
+    </insert>
+    <select id="list" resultMap="BaseResultMap" parameterType="com.carrot.timeode.dto.RelationshipPageDTO">
+
+    select <include refid="Base_Column_List"/>from relationship
+        <where>
+            <if test="name != null and name != ''">
+                and name like concat('%',#{name},'%')
+            </if>
+            <if test="tag != null and tag != ''">
+                and tag like concat('%',#{tag},'%')
+            </if>
+        </where>
+    </select>
+</mapper>

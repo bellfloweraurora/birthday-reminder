@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>亲友列表</title>
+<!--    <link rel="stylesheet" href="./styles.css">-->
+    <script src="./util.js"></script>
+    <script src="./api.js"></script>
+
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .search-section {
+            padding: 25px 30px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .search-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            align-items: end;
+        }
+
+        .form-group {
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .search-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .add-btn {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ffa502 100%);
+            color: white;
+            text-decoration: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            display: inline-block;
+            margin-left: auto;
+        }
+
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-container {
+            padding: 20px 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        thead {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        th {
+            padding: 16px 15px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background-color 0.3s;
+        }
+
+        tbody tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background-color: #e3f2fd;
+        }
+
+        td {
+            padding: 14px 15px;
+            color: #495057;
+            font-size: 15px;
+        }
+
+        .action-cell {
+            display: flex;
+            gap: 10px;
+        }
+
+        .delete-btn, .edit-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .delete-btn {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .edit-btn {
+            background: #4facfe;
+            color: white;
+        }
+
+        .delete-btn:hover, .edit-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        /*.status-yes {*/
+        /*    color: #28a745;*/
+        /*    font-weight: 600;*/
+        /*}*/
+
+        /*.status-no {*/
+        /*    color: #6c757d;*/
+        /*}*/
+        /* 美观的开关样式 */
+        /*.switch::before {*/
+        /*    content: "";*/
+        /*    position: absolute;*/
+        /*    top: 2px;*/
+        /*    left: 2px;*/
+        /*    width: 20px;*/
+        /*    height: 20px;*/
+        /*    background-color: white;*/
+        /*    border-radius: 50%;*/
+        /*    transition: transform 0.3s ease, background-color 0.3s ease;*/
+        /*}*/
+
+        /*.switch-true {*/
+        /*    background-color: #007bff;*/
+        /*}*/
+
+        /*.switch-true::before {*/
+        /*    transform: translateX(26px);*/
+        /*}*/
+        /* 美观的开关样式 */
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 48px;
+            height: 24px;
+            vertical-align: middle;
+        }
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        .switch-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc; /* 默认中灰色 */
+            transition: .4s;
+            border-radius: 24px;
+        }
+        .switch-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+        /* 对于值为true的开关，当被选中时（正常状态）显示蓝色 */
+        .switch-true input:checked + .switch-slider {
+            background-color: dodgerblue;
+        }
+
+        .switch-true input:checked + .switch-slider:before {
+            transform: translateX(24px);
+        }
+        /* 对于值为false的开关，总是显示深灰色 */
+        .switch-false .switch-slider {
+            background-color: #888787; /* 深灰色 */
+        }
+        /* 对于值为true的开关，当未选中时（异常状态）也显示深灰色 */
+        .switch-true input:not(:checked) + .switch-slider {
+            background-color: dodgerblue;
+        }
+
+
+        @media (max-width: 768px) {
+            .search-form {
+                flex-direction: column;
+            }
+
+            .form-group {
+                min-width: 100%;
+            }
+
+            .add-btn {
+                margin-left: 0;
+                text-align: center;
+            }
+
+            th, td {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+        }
+
+        /*通义添加的page分页样式*/
+        .page {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-top: 20px;
+            border-top: 1px solid #e9ecef;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .pagination-info {
+            font-size: 14px;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .pagination-controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .page-btn {
+            padding: 8px 15px;
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+            color: #495057;
+        }
+
+        .page-btn:hover:not(:disabled) {
+            background: #e9ecef;
+            transform: translateY(-1px);
+        }
+
+        .page-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .page-btn:not(:disabled) {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+        }
+
+        @media (max-width: 768px) {
+            .page {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .pagination-controls {
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+<template id="relationship-row-template">
+    <tr>
+        <td>${name}</td>
+        <td>${calendarType}</td>
+        <td>${birthday}</td>
+        <td>${tag}</td>
+<!--        开关-->
+<!--        <td class="status-no">${reminderEnabled}</td>-->
+<!--        <td class="status-yes">${congratulateEnabled}</td>-->
+<!--        <td>-->
+<!--            <span class="switch switch-${reminderEnabled}"></span>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <span class="switch switch-${congratulateEnabled}"></span>-->
+<!--        </td>-->
+
+<!--        <td>-->
+<!--            <label class="switch switch-${reminderEnabled}">-->
+<!--                <input type="checkbox" disabled>-->
+<!--                <span class="switch-slider"></span>-->
+<!--            </label>-->
+<!--        </td>-->
+<!--        <td>-->
+<!--            <label class="switch switch-${congratulateEnabled}">-->
+<!--                <input type="checkbox" disabled>-->
+<!--                <span class="switch-slider"></span>-->
+<!--            </label>-->
+<!--        </td>-->
+        <td>
+            <label class="switch switch-${reminderClass}">
+                <input type="checkbox" disabled ${reminderChecked}>
+                <span class="switch-slider"></span>
+            </label>
+        </td>
+        <td>
+            <label class="switch switch-${congratulateClass}">
+                <input type="checkbox" disabled ${congratulateChecked}>
+                <span class="switch-slider"></span>
+            </label>
+        </td>
+
+        <td class="action-cell">
+            <button class="delete-btn">删除</button>
+            <button class="edit-btn">修改</button>
+        </td>
+    </tr>
+</template>
+<div class="container">
+    <div class="header">
+        <h1>亲友列表</h1>
+        <p>管理您的亲友重要日期</p>
+    </div>
+
+    <div class="search-section">
+        <div class="search-form">
+            <div class="form-group">
+                <label for="page-query-name">亲友姓名</label>
+                <input type="text" id="page-query-name" placeholder="请输入亲友姓名">
+            </div>
+            <div class="form-group">
+                <label for="page-query-tag">标签</label>
+                <input type="text" id="page-query-tag" placeholder="请输入标签">
+            </div>
+<!--            <button class="search-btn" onclick="renderRelationships()">搜索</button>-->
+            <button class="search-btn" onclick="pageQuery()">搜索</button>
+            <a href="./add.html" class="add-btn">新增亲友</a>
+        </div>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>亲友姓名</th>
+                    <th>生日类型</th>
+                    <th>日期</th>
+                    <th>标签</th>
+                    <th>是否提醒</th>
+                    <th>替我祝贺</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody id="relationshipsBody">
+<!--                <tr>-->
+<!--                    <td>张三</td>-->
+<!--                    <td>公历</td>relationshipsBody-->
+<!--                    <td>01-01</td>-->
+<!--                    <td>朋友</td>-->
+<!--                    <td class="status-yes">是</td>-->
+<!--                    <td class="status-yes">是</td>-->
+<!--                    <td class="action-cell">-->
+<!--                        <button class="delete-btn">删除</button>-->
+<!--                        <button class="edit-btn">修改</button>-->
+<!--                    </td>-->
+<!--                </tr>-->
+<!--                <tr>-->
+<!--                    <td>李四</td>-->
+<!--                    <td>农历</td>-->
+<!--                    <td>05-15</td>-->
+<!--                    <td>家人</td>-->
+<!--                    <td class="status-yes">是</td>-->
+<!--                    <td class="status-no">否</td>-->
+<!--                    <td class="action-cell">-->
+<!--                        <button class="delete-btn">删除</button>-->
+<!--                        <button class="edit-btn">修改</button>-->
+<!--                    </td>-->
+<!--                </tr>-->
+            </tbody>
+        </table>
+
+
+<!--分页-->
+        <div class="page" id="pagination">
+            <div class="pagination-info">
+                <span>共 <span id="totalRecords">0</span> 条记录，</span>
+                <span>第 <span id="currentPage">1</span>/<span id="totalPages">1</span> 页</span>
+            </div>
+            <div class="pagination-controls">
+<!--                <button id="firstPageBtn" class="page-btn" onclick="goToPage(1)">首页</button>-->
+<!--                <button id="prevPageBtn" class="page-btn" onclick="goToPage(currentPage-1)">上一页</button>-->
+<!--                <button id="nextPageBtn" class="page-btn" onclick="goToPage(currentPage+1)">下一页</button>-->
+<!--                <button id="lastPageBtn" class="page-btn" onclick="goToPage(totalPages)">末页</button>-->
+                <button id="firstPageBtn" class="page-btn">首页</button>
+                <button id="prevPageBtn" class="page-btn">上一页</button>
+                <button id="nextPageBtn" class="page-btn">下一页</button>
+                <button id="lastPageBtn" class="page-btn">末页</button>
+            </div>
+        </div>
+
+
+<!--        <style>-->
+
+<!--        </style>-->
+    </div>
+</div>
+
+<script>
+    // 添加按钮交互效果
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            if(confirm('确定要删除这位亲友吗？')) {
+                this.closest('tr').remove();
+            }
+        });
+    });
+
+    // 搜索按钮交互
+    document.querySelector('.search-btn').addEventListener('click', function() {
+        const name = document.getElementById('page-query-name').value;
+        const tag = document.getElementById('page-query-tag').value;
+        alert(`搜索条件：姓名 "${name}"，标签 "${tag}"`);
+    });
+</script>
+<script src="./relationship.js"></script>
+</body>
+</html>

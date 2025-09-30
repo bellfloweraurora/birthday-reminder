@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carrot.timeode.mapper.ReminderPlanMapper">
+
+    <resultMap id="BaseResultMap" type="com.carrot.timeode.domain.ReminderPlan">
+            <id property="id" column="id" />
+            <result property="relationshipId" column="relationship_id" />
+            <result property="reminderDate" column="reminder_date" />
+            <result property="daysBefore" column="days_before" />
+            <result property="reminderType" column="reminder_type" />
+            <result property="executionStatus" column="execution_status" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,relationship_id,reminder_date,days_before,reminder_type,execution_status
+    </sql>
+    <insert id="batchAdd">
+        INSERT INTO reminder_plan (
+        relationship_id,
+        reminder_date,
+        days_before,
+        reminder_type,
+        execution_status
+        ) VALUES
+        <foreach collection="plans" item="plan" separator=",">
+            (
+            #{plan.relationshipId},
+            #{plan.reminderDate},
+            #{plan.daysBefore},
+            #{plan.reminderType},
+            #{plan.executionStatus}
+            )
+        </foreach>
+    </insert>
+    <update id="update">
+        UPDATE reminder_plan
+        SET relationship_id = #{relationshipId},
+        reminder_date = #{reminderDate},
+        days_before = #{daysBefore},
+        reminder_type = #{reminderType},
+        execution_status = #{executionStatus}
+        WHERE id = #{id}
+    </update>
+    <select id="ListUndoPlans" resultType="com.carrot.timeode.domain.ReminderPlan">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM reminder_plan
+        WHERE reminder_date = #{now}
+        AND execution_status = 0
+    </select>
+
+</mapper>

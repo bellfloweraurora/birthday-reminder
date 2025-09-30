@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>新增亲友</title>
+    <script src="./util.js"></script>
+    <script src="./api.js"></script>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            padding: 25px 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: #4facfe;
+            box-shadow: 0 0 0 3px rgba(79, 172, 254, 0.1);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 20px;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-top: 10px;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .submit-btn, .cancel-btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: #f8f9fa;
+            color: #495057;
+            border: 1px solid #dee2e6;
+        }
+
+        .submit-btn:hover, .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+
+            .checkbox-group {
+                flex-direction: column;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>新增亲友</h1>
+        <p>填写亲友信息</p>
+    </div>
+
+    <div class="form-section">
+        <form id="relationshipForm">
+            <div class="form-group">
+                <label for="name">亲友姓名 *</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="calendarType">生日类型 *</label>
+                    <select id="calendarType" name="calendarType" required>
+                        <option value="">请选择</option>
+                        <option value="0">公历</option>
+                        <option value="1">农历</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="birthday">生日日期 *</label>
+                    <input type="date" id="birthday" name="birthday" required>
+                </div>
+            </div>
+<!--            没有-->
+<!--            /**-->
+<!--            * 生日-月份-->
+<!--            */-->
+<!--            private Integer birthdayMonth;-->
+
+<!--            /**-->
+<!--            * 生日-天-->
+<!--            */-->
+<!--            private Integer birthdayDay;-->
+            <!-- 在生日日期字段后添加以下内容 -->
+<!--            <div class="form-row">-->
+<!--                <div class="form-group">-->
+<!--                    <label for="birthdayMonth">生日月份 *</label>-->
+<!--                    <input type="number" id="birthdayMonth" name="birthdayMonth" min="1" max="12" required>-->
+<!--                </div>-->
+
+<!--                <div class="form-group">-->
+<!--                    <label for="birthdayDay">生日天数 *</label>-->
+<!--                    <input type="number" id="birthdayDay" name="birthdayDay" min="1" max="31" required>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+            <div class="form-group">
+                <label for="tag">标签</label>
+                <input type="text" id="tag" name="tag" placeholder="如：家人、朋友、同事">
+            </div>
+
+            <div class="form-group">
+                <label>提醒设置</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="reminderEnabled" name="reminderEnabled">
+                        <label for="reminderEnabled">启用提醒</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>祝贺设置</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="congratulateEnabled" name="congratulateEnabled">
+                        <label for="congratulateEnabled">替我祝贺</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="relationshipEmail">亲友邮箱</label>
+                <input type="email" id="relationshipEmail" name="relationshipEmail" placeholder="用于发送提醒邮件">
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="greeting">招呼语</label>
+                    <input type="text" id="greeting" name="greeting" placeholder="如：亲爱的">
+                </div>
+
+                <div class="form-group">
+                    <label for="selfCall">自称</label>
+                    <input type="text" id="selfCall" name="selfCall" placeholder="如：你的好友">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="daysBefore">提前通知天数</label>
+                <input type="text" id="daysBefore" name="daysBefore" placeholder="多个天数用逗号分隔，如：1,3,7">
+            </div>
+
+            <div class="form-group">
+                <label for="notes">备注</label>
+                <textarea id="notes" name="notes" rows="3" placeholder="其他相关信息"></textarea>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="submit-btn">保存</button>
+                <button type="button" class="cancel-btn" onclick="window.location.href='./index.html'">取消</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="./add.js"></script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.carrot.timeode.mapper.ReminderRecordMapper">
+
+    <resultMap id="BaseResultMap" type="com.carrot.timeode.domain.ReminderRecord">
+            <id property="id" column="id" />
+            <result property="relationshipId" column="relationship_id" />
+            <result property="reminderTime" column="reminder_time" />
+            <result property="receiver" column="receiver" />
+            <result property="reminderType" column="reminder_type" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,relationship_id,reminder_time,receiver,reminder_type
+    </sql>
+</mapper>
