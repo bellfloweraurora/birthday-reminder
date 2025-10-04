@@ -56,6 +56,7 @@
                   #{daysBefore, typeHandler=com.carrot.timeode.typehandler.IntegerListJsonTypeHandler})
 
     </insert>
+
     <select id="list" resultMap="BaseResultMap" parameterType="com.carrot.timeode.dto.RelationshipPageDTO">
 
     select <include refid="Base_Column_List"/>from relationship

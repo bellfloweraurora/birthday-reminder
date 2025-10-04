@@ -37,12 +37,13 @@
     <update id="update">
         UPDATE reminder_plan
         SET relationship_id = #{relationshipId},
-        reminder_date = #{reminderDate},
-        days_before = #{daysBefore},
-        reminder_type = #{reminderType},
-        execution_status = #{executionStatus}
+            reminder_date = #{reminderDate},
+            days_before = #{daysBefore},
+            reminder_type = #{reminderType},
+            execution_status = #{executionStatus}
         WHERE id = #{id}
     </update>
+
     <select id="ListUndoPlans" resultType="com.carrot.timeode.domain.ReminderPlan">
         SELECT
         <include refid="Base_Column_List" />

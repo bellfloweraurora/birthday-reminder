@@ -28,12 +28,18 @@ public class RelationshipController {
     @Resource
     private IReminderPlanService reminderPlanService;
 
-    @GetMapping("/page")
-    public ResponseEntity<PageInfo<RelationshipPageVO>> page(RelationshipPageDTO dto){
-        System.out.println("！！！！！！！！！！page and size ！！！！！！" + dto.getPage() + ',' + dto.getSize());
-        PageInfo<RelationshipPageVO> page = relationshipService.page(dto);
-        return ResponseEntity.success(page);
-    }
+//    @GetMapping("/page")
+//    public ResponseEntity<PageInfo<RelationshipPageVO>> page(RelationshipPageDTO dto){
+//        System.out.println("！！！！！！！！！！page and size ！！！！！！" + dto.getPage() + ',' + dto.getSize());
+//        PageInfo<RelationshipPageVO> page = relationshipService.page(dto);
+//        return ResponseEntity.success(page);
+//    }
+@GetMapping("/page")
+public ResponseEntity<PageInfo<RelationshipPageVO>> page(RelationshipPageDTO dto){
+    System.out.println("！！！！！！！！！！page and size ！！！！！！" + dto.getPage() + ',' + dto.getSize());
+    PageInfo<RelationshipPageVO> page = relationshipService.page(dto);
+    return ResponseEntity.success(page);
+}
     @PostMapping(value = "/add")
     @Transactional
     public ResponseEntity<Boolean> add(@RequestBody RelationshipAddDTO dto){

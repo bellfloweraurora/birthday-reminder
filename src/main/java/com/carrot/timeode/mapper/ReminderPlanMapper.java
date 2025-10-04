@@ -16,8 +16,8 @@ public interface ReminderPlanMapper {
     int batchAdd(List<ReminderPlan> plans);
 
     List<ReminderPlan> ListUndoPlans(LocalDate now);
-
     void update(List<ReminderPlan> plans);
+
 }
 
 

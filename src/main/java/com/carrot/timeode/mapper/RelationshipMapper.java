@@ -1,6 +1,7 @@
 package com.carrot.timeode.mapper;
 
 import com.carrot.timeode.domain.Relationship;
+import com.carrot.timeode.domain.ReminderPlan;
 import com.carrot.timeode.dto.RelationshipPageDTO;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
@@ -20,6 +21,7 @@ public interface RelationshipMapper {
     List<Relationship> list(RelationshipPageDTO dto);
 
     int add(Relationship entity);
+
 }
 
 
